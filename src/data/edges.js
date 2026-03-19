@@ -19,6 +19,8 @@ const rawEdges = [
   { from: 149, to: 148 },
   { from: 148, to: 147 },
   { from: 148, to: 150 },
+  { from: 150, to: 151 },
+  { from: 147, to: 151 },
   //南側一帯
   { from: 110, to: 103 },
   { from: 103, to: 104 },
