@@ -5,6 +5,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { getEdges } from "./data/edges";
 import MapFloorView from "./components/MapFloorView";
 import Layout from "./components/Layout";
+import { useLocation } from "react-router-dom";
 
 export default function App() {
   const [nodes, setNodes] = useState([]);
@@ -41,6 +42,27 @@ export default function App() {
     fetchData();
   }, []);
 
+  // ---------------------
+// URLから現在地を自動設定（QRコード対応）
+// ---------------------
+useEffect(() => {
+  if (nodes.length === 0) return;
+
+  const params = new URLSearchParams(location.search);
+  const nodeId = params.get("node");
+
+  if (!nodeId) return;
+
+  // nodesから一致するノードを探す
+  const targetNode = nodes.find(n => n.id === nodeId);
+
+  if (targetNode) {
+    const name = getDisplayName(targetNode);
+    setStart(name);
+  }
+}, [location.search, nodes]);
+
+  
   const places = nodes.filter(node => node.tf === true || node.tf === "t");
 
   const categoryFiltersObj = {};
@@ -280,6 +302,9 @@ export default function App() {
     const n = places.find(p => p.id === r.id);
     return !n || n.category !== "中継";
   });
+
+  //QRコード
+  const location = useLocation();
 
   if (loading) {
     return (
