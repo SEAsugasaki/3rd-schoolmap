@@ -57,6 +57,15 @@ export default function App() {
     if (nodes.length > 0) {
       setCategoryFilters(categoryFiltersObj);
       setFilteredPlaces(places.filter((p) => p.category !== "階段" && p.category !== "中継"));
+    // ↓ 追加: URLパラメータから現在地を自動セット
+    const params = new URLSearchParams(window.location.search);
+    const locParam = params.get("loc");
+    if (locParam) {
+      const matched = places.find(
+        (p) => getDisplayName(p) === locParam
+      );
+      if (matched) setStart(getDisplayName(matched));
+    }
     }
   }, [nodes]);
 
